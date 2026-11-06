@@ -1,10 +1,12 @@
 # coding: utf-8
 import json
 from flask import Flask, request
-import sys
 from musica import *
 from collections import OrderedDict
 import unicodedata
+
+import db
+import sequencias
 
 app = Flask(__name__)
 
@@ -37,16 +39,10 @@ TAM_PAGINA = 100
 genero_musicas = {}
 generos = set()
 acordes = set()
-sequencias = {'BmGDA' : 0,
-        'CGAmF' : 1,
-        'EmG' : 2,
-        'CA7DmG7' : 3,
-        'GmF' : 4,
-        'CC7FFm' : 5}
 
 musicas_dict = {}
 
-f = open('data/top/dataset_final.csv')
+f = open('data/top/dataset_final.csv', encoding='utf-8')
 f.readline()
 
 for line in f:
@@ -96,6 +92,10 @@ for k,v in genero_musicas.items():
     genero_musicas[k].sort(key = lambda x : x.popularidade, reverse = True)
 
 f.close()
+
+# Inicializa a persistência do catálogo de sequências (SQLite) e semeia as 6
+# originais. As músicas/gêneros continuam vindo do CSV acima.
+db.init_db()
 
 
 @app.route('/')
@@ -163,6 +163,28 @@ def get_generos():
 def get_acordes():
     return json.dumps(list(acordes))
 
+@app.route('/api/sequencias', methods=['GET'])
+def api_listar_sequencias():
+    return json.dumps(db.listar_sequencias())
+
+@app.route('/api/sequencias', methods=['POST'])
+def api_cadastrar_sequencia():
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        return json.dumps({'erro': 'corpo JSON inválido'}), 400
+
+    try:
+        sequencia = db.cadastrar_sequencia(payload.get('nome'), payload.get('acordes'))
+    except db.SequenciaDuplicada as duplicada:
+        return json.dumps({
+            'erro': 'sequência já cadastrada',
+            'sequencia': db.publica(duplicada.existente),
+        }), 409
+    except ValueError as erro:
+        return json.dumps({'erro': str(erro)}), 400
+
+    return json.dumps(db.publica(sequencia)), 201
+
 @app.route('/musica/<m_id>/')
 def get_musica(m_id):
     return json.dumps(musicas[m_id].__dict__)
@@ -188,25 +210,63 @@ def get_similares():
         musica = musicas[id_musica_tag]
         acordes = musica.acordes
     elif sequencia_tag:
-        acordes = sequencia_tag.replace(',','')
-        similares = []
+        sequencia = resolver_sequencia(sequencia_tag)
+        if sequencia is None:
+            # Sequência fora do catálogo: contrato atual devolve lista vazia.
+            return json.dumps([])
 
-        if acordes in sequencias:
-            id_seq = sequencias[acordes]
-            similares = get_pagina(get_similares_por_sequencia(id_seq, generos_key), pagina_tag)
-        return json.dumps(similares)
+        similares = get_similares_por_sequencia(sequencia, generos_key)
+        return json.dumps(get_pagina(similares, pagina_tag))
 
     similares = get_similares(acordes, generos_key, id_musica_tag)
 
     return json.dumps(get_pagina(similares, pagina_tag))
 
-def get_similares_por_sequencia(id_seq, generos_key):
+def resolver_sequencia(valor):
+    """Resolve ``?sequencia=`` para uma entrada do catálogo no banco.
+
+    Aceita o formato do frontend (``C,G,Am,F``, com vírgulas e/ou espaços) e o
+    formato antigo concatenado das 6 originais (``CGAmF``). Devolve ``None``
+    quando a sequência não está cadastrada.
+    """
+    if not valor:
+        return None
+
+    if ',' in valor or ' ' in valor:
+        partes = sequencias.dividir_acordes(valor)
+        if not partes:
+            return None
+        try:
+            acordes_seq = sequencias.canonicalizar_acordes(partes)
+        except ValueError:
+            return None
+        return db.buscar_por_chave(sequencias.chave_sequencia(acordes_seq))
+
+    legado_id = sequencias.legado_id_do_parametro(valor)
+    if legado_id is None:
+        return None
+    return db.buscar_por_legado(legado_id)
+
+def get_similares_por_sequencia(sequencia, generos_key):
     # filtra para melhor desempenho
     collection = apply_filtro(musicas.values(), generos_key)
 
+    legado_id = sequencia['legado_id']
+    if legado_id is not None:
+        # As 6 originais preservam a tag pré-computada do CSV (regressão exata).
+        alvo = None
+    else:
+        # Sequências novas usam o run contíguo calculado em tempo real.
+        alvo = sequencias.preparar_sequencia(sequencia['acordes'])
+
     similares = []
     for musica in collection:
-        if str(id_seq) in musica.seqs_famosas:
+        if legado_id is not None:
+            encontrou = str(legado_id) in musica.seqs_famosas
+        else:
+            encontrou = bool(alvo) and alvo in musica.cifra_preparada
+
+        if encontrou:
             similar = {
                 'id_unico_musica' : musica.id_unico_musica,
                 'id_artista' : musica.id_artista,

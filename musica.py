@@ -1,12 +1,15 @@
+import sequencias as _sequencias
+
+
 class Musica:
 
     def __init__(self, id_artista, nome_artista, id_musica, nome_musica,
-    
+
             genero, popularidade, seqs_famosas, tom, cifra):
 
             self.id_artista = id_artista
             self.nome_artista = nome_artista
-            
+
             self.id_musica = id_musica
             self.nome_musica = nome_musica
 
@@ -15,6 +18,9 @@ class Musica:
             self.tom = tom
             self.cifra = cifra
             self.acordes = list(set(cifra))
+            # Cifra normalizada/deduplicada uma única vez: o matching das
+            # sequências novas só faz um ``in`` sobre esta string.
+            self.cifra_preparada = _sequencias.preparar_cifra(cifra)
             self.seqs_famosas = seqs_famosas
 
             self.id_unico_musica = '%s_%s' % (id_artista, id_musica)
