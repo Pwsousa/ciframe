@@ -168,6 +168,7 @@ a:active {
   float: left;
   width: 50px;
   cursor: pointer;
+  margin: 4px;
 }
 .acorde-wrapper.small {
   width: 30px;
@@ -649,4 +650,472 @@ a:active {
 }
 .flyShadow {
   animation-name: flyShadow;
+}
+
+/* ============================================================
+   DECIFRA-ME — Página #/porsequencia (layout Flexbox)
+   ============================================================ */
+
+.decifra-page {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Sidebar esquerda — magenta, aproximadamente 33% */
+.decifra-sidebar {
+  flex: 0 0 33.333%;
+  min-width: 260px;
+  max-width: 400px;
+  background-color: #BA007C;
+  color: #FFFFFF;
+  padding: 48px 24px 24px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.sidebar-logo {
+  font-family: 'Varela Round', sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #FFFFFF;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+.decifra-sidebar h3.sidebar-title {
+  text-align: center;
+  margin: 0 0 24px;
+  font-size: 20px;
+  color: #FFFFFF;
+}
+
+.decifra-sidebar h4.text-center {
+  margin-bottom: 24px;
+}
+
+/* Contêiner dos grupos de acordes */
+.chord-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Grupo de uma sequência (linha de hexágonos) */
+.chord-group {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+/* Sequências customizadas (comunidade) — fundo lilás discreto */
+.sequencia-customizada {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 6px;
+  margin: 4px 0;
+}
+
+.sequencia-nome {
+  width: 100%;
+  font-size: 0.75em;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+  text-align: center;
+  opacity: 0.95;
+}
+
+.sequencia-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.25);
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sequencia-badge.comunidade {
+  background: #E9BC00;
+  color: #4a3b00;
+}
+
+.catalogo-estado {
+  color: #FFFFFF;
+  font-size: 0.9em;
+  text-align: center;
+  margin: 12px 0;
+}
+
+.catalogo-erro .btn-register {
+  margin-top: 8px;
+}
+
+/* Conteúdo principal direito — branco, aproximadamente 67% */
+.decifra-main {
+  flex: 1;
+  min-width: 0;
+  padding: 24px;
+  background-color: #FFFFFF;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* Painel de cadastro — lilás claro, topo da área principal */
+.registration-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding: 24px;
+  margin-bottom: 28px;
+  box-sizing: border-box;
+  background-color: #f1e5fc;
+  border: 1px solid #d1c4e9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.registration-description {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.registration-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 62px;
+  flex-shrink: 0;
+  background-color: #BA007C;
+  color: #FFFFFF;
+  border-radius: 50%;
+  font-size: 36px;
+  line-height: 1;
+}
+
+.registration-description h2 {
+  font-size: 19px;
+  margin: 0 0 8px;
+  color: #333;
+}
+
+.registration-description p {
+  font-size: 13px;
+  margin: 0;
+  color: #555;
+}
+
+/* Formulário horizontal (telas grandes) */
+.registration-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  gap: 8px;
+}
+
+.form-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-field input {
+  width: 100%;
+  height: 48px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1px solid #cbb8df;
+  border-radius: 9px;
+  background: #FFFFFF;
+  color: #333;
+  font-size: 14px;
+  font-family: 'Varela Round', sans-serif;
+}
+
+.btn-register {
+  height: 48px;
+  padding: 0 22px;
+  flex-shrink: 0;
+  background-color: #BA007C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 9px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Varela Round', sans-serif;
+  font-size: 14px;
+}
+
+.btn-register:hover {
+  background-color: #920069;
+}
+
+/* Alertas */
+.alert-erro {
+  color: #a94442;
+  background: #f2dede;
+  border: 1px solid #ebccd1;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-top: 8px;
+  font-size: 0.9em;
+}
+
+.alert-sucesso {
+  color: #3c763d;
+  background: #dff0d8;
+  border: 1px solid #d6e9c6;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-top: 8px;
+  font-size: 0.9em;
+}
+
+/* Seção de busca */
+.search-section {
+  margin-bottom: 24px;
+}
+
+.search-title {
+  font-size: 18px;
+  margin: 0 0 16px;
+  color: #333;
+}
+
+.search-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.selected-sequence {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+/* Resultados — cards de música */
+.music-card {
+  background-color: #EDEEEF;
+  color: #3C3B3C;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  min-height: 150px;
+  cursor: pointer;
+}
+
+/* ============================================================
+   Responsividade
+   ============================================================ */
+
+@media (max-width: 1100px) {
+  .registration-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .registration-form {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .decifra-page {
+    flex-direction: column;
+  }
+
+  .decifra-sidebar {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    min-width: auto;
+  }
+
+  .decifra-main {
+    width: 100%;
+    padding: 16px;
+  }
+
+  .registration-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-register {
+    width: 100%;
+  }
+
+  .search-controls {
+    flex-wrap: wrap;
+  }
+
+  .music-results {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Manter classes legacy do Bootstrap para outras páginas */
+.form-control-inverse {
+  color: #333;
+}
+
+
+/* --- Sequências customizadas (cadastro) --- */
+.cadastro-sequencia {
+  background: #f3eaff;          /* fundo claro com leve tonalidade lilás */
+  border: 1px solid #d1c4e9;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.cadastro-sequencia .cadastro-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.cadastro-sequencia .cadastro-header .glyphicon {
+  color: #BA007C;
+  font-size: 1.4em;
+}
+.cadastro-sequencia h4 {
+  margin: 0;
+  color: #333;
+  font-size: 1.4em;
+}
+.cadastro-sequencia .texto-apoio {
+  font-size: 0.95em;
+  color: #666;
+  margin-bottom: 16px;
+}
+.cadastro-sequencia .form-group {
+  margin-bottom: 0;
+}
+.cadastro-sequencia label {
+  display: block;
+  font-size: 0.9em;
+  margin-bottom: 4px;
+  color: #333;
+  font-weight: bold;
+}
+.cadastro-sequencia .form-control-inverse {
+  border: solid 2px #d1c4e9;
+  background: #fff;
+  color: #333;
+}
+.cadastro-sequencia .btn-cadastro,
+.cadastro-sequencia .btn-cadastro:visited,
+.cadastro-sequencia .btn-cadastro:active,
+.cadastro-sequencia .btn-cadastro:hover {
+  background-color: #BA007C;
+  color: #fff;
+  box-shadow: none;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 20px;
+  height: auto;
+}
+.cadastro-sequencia .btn-cadastro .glyphicon {
+  margin-right: 6px;
+}
+.cadastro-sequencia .alert-erro {
+  color: #a94442;
+  background: #f2dede;
+  border: 1px solid #ebccd1;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+.cadastro-sequencia .alert-sucesso {
+  color: #3c763d;
+  background: #dff0d8;
+  border: 1px solid #d6e9c6;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+/* Linha horizontal dos campos do cadastro em telas grandes */
+.form-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.form-row > .form-group {
+  margin-bottom: 0;
+  flex: 1 1 200px;
+}
+.form-row > .form-group.btn-group {
+  flex: 0 0 auto;
+}
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .form-row > .form-group.btn-group {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  .form-row > .form-group.btn-group .btn-cadastro {
+    width: 100%;
+  }
+}
+
+/* Card de sequência customizada no formulário (preview) */
+.preview-acordes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex: 1 1 100%;
+  margin-top: 4px;
+}
+
+.btn-register:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btn-register.btn-secondary {
+  background-color: #6c5b8a;
+}
+
+.btn-register.btn-secondary:hover {
+  background-color: #55476d;
+}
+
+.empty-state {
+  padding: 24px;
+  margin: 8px 0 16px;
+  border: 1px dashed #d1c4e9;
+  border-radius: 10px;
+  background: #faf7fe;
+  color: #555;
+  text-align: center;
 }

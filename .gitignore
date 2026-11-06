@@ -2,3 +2,8 @@ static/assets/vendor
 .venv
 *.pyc
 __pycache__/
+.pytest_cache/
+.coverage
+htmlcov/
+instance/
+*.db
